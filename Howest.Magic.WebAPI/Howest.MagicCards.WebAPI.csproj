@@ -28,7 +28,7 @@
 		<Using Include="Howest.MagicCards.DAL.Repositories" />
 		<Using Include="Howest.MagicCards.Shared.Mappings" />
 		<Using Include="AutoMapper" />
-		<Using Include="AutoMapper.QueryableExtensions"/>
+		<Using Include="AutoMapper.QueryableExtensions" />
 	</ItemGroup>
 
 </Project>
