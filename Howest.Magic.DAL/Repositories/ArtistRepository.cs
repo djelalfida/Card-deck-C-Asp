@@ -20,6 +20,14 @@ public class ArtistRepository : IArtistRepository
         return allArtists;
     }
 
+    public IEnumerable<Card> GetRelatedCards(long id) {
+        IQueryable<Card> relatedCards = _db.Cards
+                                            .Where(c => c.ArtistId == id)
+                                            .Select(c => c);
+
+        return relatedCards;
+    }
+
     public Artist? GetArtistbyId(long id)
     {
         Artist? artist = _db.Artists
