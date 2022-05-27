@@ -39,6 +39,7 @@ namespace Howest.MagicCards.WebAPI.Controllers
                 cachedResult = new PagedResponse<IEnumerable<CardReadDTO>>(
                            allCards
                                .ToFilteredList(filter.SetCode, filter.ArtistId, filter.RarityCode, filter.Name, filter.OriginalText)
+                               .Sort(filter.Sort ?? string.Empty)
                                .ToPagedList(filter.PageNumber, filter.PageSize)
                                .ProjectTo<CardReadDTO>(_mapper.ConfigurationProvider)
                                .ToList(),
