@@ -13,6 +13,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+// Add caching capabilities
+builder.Services.AddMemoryCache();
+
 
 builder.Services.AddDbContext<mtg_v1Context>
     (options => options.UseSqlServer(config.GetConnectionString("mtg_v1")));
