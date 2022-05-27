@@ -41,6 +41,19 @@ public class RootQuery : ObjectGraphType
                 return artistRepository.GetAllArtists(limit);
             }
         );
+
+        Field<ArtistType>(
+            "artistbyid",
+            arguments: new QueryArguments(
+                new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "id" }
+            ),
+            resolve: context =>
+            {
+                int id = context.GetArgument<int>("id");
+
+                return artistRepository.GetArtistbyId(id);
+            }
+        );
         #endregion
     }
 }
