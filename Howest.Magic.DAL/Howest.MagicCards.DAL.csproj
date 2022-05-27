@@ -5,9 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	
   <ItemGroup>
     <Folder Include="Models\" />
+	  <Using Include="Howest.MagicCards.DAL.Models" />
   </ItemGroup>
 
   <ItemGroup>

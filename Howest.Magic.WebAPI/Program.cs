@@ -1,4 +1,3 @@
-using Howest.MagicCards.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -30,7 +29,7 @@ builder.Services.AddAutoMapper(new System.Type[] {
 
 
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

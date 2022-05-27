@@ -1,10 +1,4 @@
-﻿using Howest.MagicCards.DAL.Models; // fix later
-using Howest.MagicCards.DAL.Repositories; // fix later
-using Howest.MagicCards.Shared.DTO;
-using Howest.MagicCards.Shared.Extensions;
-using Howest.MagicCards.Shared.Filters;
-using Howest.MagicCards.WebAPI.Wrappers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Howest.MagicCards.WebAPI.Controllers
