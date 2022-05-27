@@ -8,6 +8,7 @@ ConfigurationManager config = builder.Configuration;
 builder.Services.AddDbContext<mtg_v1Context>
     (options => options.UseSqlServer(config.GetConnectionString("mtg_v1")));
 builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 
 builder.Services.AddScoped<RootSchema>();
 builder.Services.AddGraphQL()
