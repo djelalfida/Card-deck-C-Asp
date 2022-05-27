@@ -11,7 +11,15 @@ public class ArtistRepository : IArtistRepository
     {
         _db = db;
     }
-    
+
+    public IEnumerable<Artist> GetAllArtists()
+    {
+        IQueryable<Artist> allArtists = _db.Artists
+                                            .Select(a => a);
+
+        return allArtists;
+    }
+
     public Artist? GetArtistbyId(long id)
     {
         Artist? artist = _db.Artists

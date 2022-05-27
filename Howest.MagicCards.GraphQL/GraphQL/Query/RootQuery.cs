@@ -4,10 +4,11 @@ namespace Howest.MagicCards.GraphQL.GraphQLTypes;
 
 public class RootQuery : ObjectGraphType
 {
-    public RootQuery(ICardRepository cardRepository)
+    public RootQuery(ICardRepository cardRepository, IArtistRepository artistRepository)
     {
         Name = "Query";
 
+        #region Card
         Field<ListGraphType<CardType>>(
             "cards",
             arguments: new QueryArguments(
@@ -27,5 +28,16 @@ public class RootQuery : ObjectGraphType
                     .ToList();
             }
         );
+        #endregion
+
+        #region Artist
+        Field<ListGraphType<ArtistType>>(
+            "artists",
+            resolve: context =>
+            {
+                return artistRepository.GetAllArtists();
+            }
+        );
+        #endregion
     }
 }
