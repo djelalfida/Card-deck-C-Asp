@@ -37,4 +37,17 @@ public static class CardExtensions
 
         return cards;
     }
+
+    public static IQueryable<Card> Sort(this IQueryable<Card> cards, string sort)
+    {
+        if (string.IsNullOrEmpty(sort))
+        {
+            return cards;
+        }
+
+
+        return sort.StartsWith("asc") || sort == "1" ? cards.OrderBy(c => c.Name) : cards.OrderByDescending(c => c.Name);
+
+    }
+
 }
