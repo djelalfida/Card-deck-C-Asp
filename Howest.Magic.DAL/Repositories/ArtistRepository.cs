@@ -12,12 +12,12 @@ public class ArtistRepository : IArtistRepository
         _db = db;
     }
 
-    public IEnumerable<Artist> GetAllArtists()
+    public IEnumerable<Artist> GetAllArtists(int limit)
     {
         IQueryable<Artist> allArtists = _db.Artists
                                             .Select(a => a);
 
-        return allArtists;
+        return limit > 0 ? allArtists.Take(limit) : allArtists;
     }
 
     public IEnumerable<Card> GetRelatedCards(long id) {

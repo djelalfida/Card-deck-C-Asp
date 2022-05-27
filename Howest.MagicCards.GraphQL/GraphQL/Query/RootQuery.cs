@@ -33,9 +33,14 @@ public class RootQuery : ObjectGraphType
         #region Artist
         Field<ListGraphType<ArtistType>>(
             "artists",
+            arguments: new QueryArguments(
+                new QueryArgument<IntGraphType> { Name = "limit", DefaultValue = 0 }
+            ),
             resolve: context =>
             {
-                return artistRepository.GetAllArtists();
+                int limit = context.GetArgument<int>("limit");
+
+                return artistRepository.GetAllArtists(limit);
             }
         );
         #endregion

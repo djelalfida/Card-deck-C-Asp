@@ -2,7 +2,7 @@
 
 public interface IArtistRepository
 {
-    IEnumerable<Artist> GetAllArtists();
+    IEnumerable<Artist> GetAllArtists(int limit);
     IEnumerable<Card> GetRelatedCards(long id);
     Artist? GetArtistbyId(long id);
 }
