@@ -3,6 +3,5 @@
     public interface ICardRepository
     {
         IQueryable<Card> GetAllCards();
-
     }
 }
