@@ -30,17 +30,17 @@ namespace Howest.MagicCards.WebAPI.Controllers
             {
                 // all cards
                 IQueryable<Card> allCards = _cardRepo.GetAllCards();
-                cachedResult = new PagedResponse<IEnumerable<CardReadDTO>>(
-                           allCards
+                List<CardReadDTO> allCardsList = allCards
                                .ToFilteredList(filter.SetCode, filter.ArtistId, filter.RarityCode, filter.Name, filter.OriginalText)
                                .Sort(filter.Sort ?? string.Empty)
                                .ToPagedList(filter.PageNumber, filter.PageSize)
-                               .ProjectTo<CardReadDTO>(_mapper.ConfigurationProvider)
-                               .ToList(),
+                               .ProjectTo<CardReadDTO>(_mapper.ConfigurationProvider).ToList();
+                cachedResult = new PagedResponse<IEnumerable<CardReadDTO>>(
+                           allCardsList,
                            filter.PageNumber,
                            filter.PageSize)
                 {
-                    TotalRecords = allCards.Count()
+                    TotalRecords = allCardsList.Count()
                 };
 
                 MemoryCacheEntryOptions cacheOptions = new MemoryCacheEntryOptions()

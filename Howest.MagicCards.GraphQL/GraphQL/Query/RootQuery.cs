@@ -1,6 +1,4 @@
-﻿using GraphQL;
-
-namespace Howest.MagicCards.GraphQL.GraphQLTypes;
+﻿namespace Howest.MagicCards.GraphQL.GraphQLTypes;
 
 public class RootQuery : ObjectGraphType
 {
