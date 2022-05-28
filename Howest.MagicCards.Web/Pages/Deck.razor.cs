@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -28,6 +29,9 @@ public partial class Deck
 
     [Inject]
     public IMapper Mapper { get; set; }
+
+    [Inject]
+    public ProtectedLocalStorage storage { get; set; }
     #endregion
 
     #region Parameters
@@ -49,6 +53,19 @@ public partial class Deck
 
         await ShowAllCards();
     }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            List<CardReadDTO>? selectedCards = await ReadSelectedCards();
+            if (selectedCards != null)
+            {
+                _selectedCards = selectedCards;
+                StateHasChanged();
+            }
+        }
+    }
 
     private async Task ShowAllCards()
     {
@@ -68,7 +85,7 @@ public partial class Deck
         }            
     }
 
-    private void SelectCard(CardReadDTO card)
+    private async void SelectCard(CardReadDTO card)
     {
         if (_selectedCards.Count == MaxSelectedCards)
         {
@@ -91,7 +108,7 @@ public partial class Deck
                 _selectedCards.Add(card);
             }
         }
-
+        await SaveSelectedCards();
     }
 
     private async Task ChangePage(int backOrNext)
@@ -108,6 +125,17 @@ public partial class Deck
     private async Task PreviousPage()
     {
         await ChangePage(-1);
+    }
+
+    private async Task SaveSelectedCards()
+    {
+        await storage.SetAsync("selectedCards", _selectedCards);
+    }
+    
+    private async Task<List<CardReadDTO>?> ReadSelectedCards()
+    {
+        ProtectedBrowserStorageResult<List<CardReadDTO>> storageResult = await storage.GetAsync<List<CardReadDTO>>("selectedCards");
+        return storageResult.Success ? storageResult.Value : new List<CardReadDTO>();
     }
 
     //private async Task CreateDeck()
