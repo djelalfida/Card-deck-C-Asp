@@ -18,10 +18,12 @@ public partial class Deck
     private List<CardReadDTO> _selectedCards = new List<CardReadDTO>();
 
     private IEnumerable<ArtistReadDTO>? _artists = null;
+    private IEnumerable<RarityReadDTO>? _rarities = null;
 
     private string SelectedSorting { get; set; } = "asc";
     private string NameFilter { get; set; } = string.Empty;
     private string ArtistFilter { get; set; } = string.Empty;
+    private string RarityFilter { get; set; } = string.Empty;
 
     private readonly JsonSerializerOptions _jsonOptions;
     private HttpClient _httpClient;
@@ -59,6 +61,7 @@ public partial class Deck
 
         await ShowAllCards();
         await ShowAllArtists();
+        await ShowAllRarities();
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -79,7 +82,8 @@ public partial class Deck
     {
         string nameFilter = NameFilter != string.Empty ? $"&name={NameFilter}" : string.Empty;
         string artistFilter = ArtistFilter != string.Empty ? $"&artistid={ArtistFilter}" : string.Empty;
-        HttpResponseMessage response = await _httpClient.GetAsync($"cards?pagenumber={pageNumber ?? "1"}&sort={SelectedSorting}{nameFilter}{artistFilter}");
+        string rarityFilter = RarityFilter != string.Empty ? $"&raritycode={RarityFilter}" : string.Empty;
+        HttpResponseMessage response = await _httpClient.GetAsync($"cards?pagenumber={pageNumber ?? "1"}&sort={SelectedSorting}{nameFilter}{artistFilter}{rarityFilter}");
 
         string apiResponse = await response.Content.ReadAsStringAsync();
 
@@ -112,6 +116,24 @@ public partial class Deck
             _artists = new List<ArtistReadDTO>();
         }
     }
+    
+    private async Task ShowAllRarities()
+    {
+        HttpResponseMessage response = await _httpClient.GetAsync($"cards/rarity");
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            IEnumerable<RarityReadDTO>? result = JsonSerializer.Deserialize<IEnumerable<RarityReadDTO>>(apiResponse, _jsonOptions);
+
+            _rarities = result;
+        }
+        else
+        {
+            _rarities = new List<RarityReadDTO>();
+        }
+    }
 
 
 
@@ -134,6 +156,13 @@ public partial class Deck
     private async Task FindCardByArtist(ChangeEventArgs e)
     {
         ArtistFilter = e.Value != null ? e.Value.ToString() : string.Empty;
+        _cards = null;
+        await ShowAllCards();
+    }
+
+    private async Task FilterCardByRarity(ChangeEventArgs e)
+    {
+        RarityFilter = e.Value != null ? e.Value.ToString() : string.Empty;
         _cards = null;
         await ShowAllCards();
     }

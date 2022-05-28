@@ -29,6 +29,19 @@
             }
         }
     </select>
+
+    <label for="rarity">Filter by rarity:</label>
+    <select id="rarity" @onchange="FilterCardByRarity">
+        <option value="">All</option>
+        @if (_rarities != null)
+        {
+            @foreach (RarityReadDTO rarity in _rarities)
+            {
+                <option value="@rarity.Code">@rarity.Name</option>
+            }
+        }
+        
+    </select>
 </div>
 
 @if (_cards == null)
