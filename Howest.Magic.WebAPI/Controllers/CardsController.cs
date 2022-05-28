@@ -60,6 +60,22 @@ namespace Howest.MagicCards.WebAPI.Controllers
 
         }
 
+        // get all rarities
+        [HttpGet("rarity")]
+        public ActionResult<IEnumerable<RarityReadDTO>> GetAllRarities()
+        {
+            return (_cardRepo.GetRarities() is IQueryable<Rarity> rarities) ?
+                Ok(
+                    rarities.ProjectTo<RarityReadDTO>(_mapper.ConfigurationProvider)
+                    .ToList()
+                    ) : NotFound(new Response<RarityReadDTO>()
+                    {
+                        Succeeded = false,
+                        Errors = new string[] { "404" },
+                        Message = "No rarities found "
+                    });
+        }
+
 
 
     }
