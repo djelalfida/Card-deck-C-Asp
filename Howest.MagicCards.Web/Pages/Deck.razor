@@ -3,6 +3,11 @@
 
 <h1>@title</h1>
 
+@if (message.Length > 0)
+{
+    <p>@message</p>
+}
+
 @if (_cards == null)
 {
     <p>Loading ...</p>
@@ -21,7 +26,7 @@
             }
         </div>
         <div class="selected-cards">
-            <h2>Selected cards</h2>
+            <h2>Selected cards (@(_selectedCards.Count)/@MaxSelectedCards</h2>
             <ul>
                     @foreach (CardReadDTO card in _selectedCards)
                     {

@@ -7,6 +7,8 @@ namespace Howest.MagicCards.Web.Pages;
 
 public partial class Deck
 {
+    private const int MaxSelectedCards = 60;
+
     private string message = string.Empty;
 
     private string title = "Card Deck Builder";
@@ -68,17 +70,30 @@ public partial class Deck
 
     private void SelectCard(CardReadDTO card)
     {
-        if (_selectedCards.Contains(card))
+        if (_selectedCards.Count == MaxSelectedCards)
         {
-            _selectedCards.Remove(card);
+            if (_selectedCards.Contains(card))
+            {
+                _selectedCards.Remove(card);
+            }
+
+            message = $"You can only select {MaxSelectedCards} cards";
+
         }
         else
         {
-            _selectedCards.Add(card);
+            if (_selectedCards.Contains(card))
+            {
+                _selectedCards.Remove(card);
+            }
+            else
+            {
+                _selectedCards.Add(card);
+            }
         }
+
     }
 
-    // next page 
     private async Task ChangePage(int backOrNext)
     {
         pageNumber = (int.Parse(pageNumber ?? "1") + backOrNext).ToString();
