@@ -1,13 +1,31 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+ConfigurationManager config = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-var app = builder.Build();
+builder.Services.AddDbContext<mtg_v1Context>
+    (options => options.UseSqlServer(config.GetConnectionString("mtg_v1")));
+
+
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+
+
+
+builder.Services.AddAutoMapper(new System.Type[] {
+                                             typeof(Howest.MagicCards.Shared.Mappings.CardsProfile)});
+
+builder.Services.AddHttpClient("CardsAPI", client =>
+{
+    client.BaseAddress = new Uri(config.GetValue<string>("ApiLink"));
+});
+
+
+
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
