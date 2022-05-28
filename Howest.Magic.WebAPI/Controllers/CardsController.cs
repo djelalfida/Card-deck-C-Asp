@@ -40,7 +40,7 @@ namespace Howest.MagicCards.WebAPI.Controllers
                            filter.PageNumber,
                            filter.PageSize)
                 {
-                    TotalRecords = allCardsList.Count()
+                    TotalRecords = allCards.Count()
                 };
 
                 MemoryCacheEntryOptions cacheOptions = new MemoryCacheEntryOptions()

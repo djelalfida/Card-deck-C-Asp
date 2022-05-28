@@ -8,6 +8,9 @@
     <p>Loading ...</p>
 } else
 {
+    <a href="#" @onclick="NextPage" @onclick:preventDefault="true">Next Page @pageNumber</a>
+    <a href="#" @onclick="PreviousPage" @onclick:preventDefault="true">Previous Page @((Convert.ToInt16(pageNumber) - 1).ToString())</a>
+    
     <div class="card-selection">
         <div class="cards">
             @foreach(CardReadDTO card in _cards)
@@ -20,14 +23,10 @@
         <div class="selected-cards">
             <h2>Selected cards</h2>
             <ul>
-                @if (_selectedCards != null)
-                {
                     @foreach (CardReadDTO card in _selectedCards)
                     {
                         <li><a href="#" @onclick="@(() => SelectCard(card))" @onclick:preventDefault="true">@card.Name</a></li>
                     }
-                }
-                
             </ul>
         </div>
     </div>

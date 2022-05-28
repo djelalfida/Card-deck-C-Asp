@@ -77,5 +77,48 @@ public partial class Deck
             _selectedCards.Add(card);
         }
     }
-    
+
+    // next page 
+    private async Task ChangePage(int backOrNext)
+    {
+        pageNumber = (int.Parse(pageNumber ?? "1") + backOrNext).ToString();
+        _cards = null;
+        await ShowAllCards();
+    }
+
+    private async Task NextPage()
+    {
+        await ChangePage(1);
+    }
+    private async Task PreviousPage()
+    {
+        await ChangePage(-1);
+    }
+
+    //private async Task CreateDeck()
+    //{
+    //    if (_selectedCards.Count == 0)
+    //    {
+    //        message = "You need to select at least one card";
+    //        return;
+    //    }
+
+    //    DeckCreateDTO deck = new DeckCreateDTO
+    //    {
+    //        Cards = _selectedCards.Select(c => c.Id).ToList()
+    //    };
+
+    //    HttpResponseMessage response = await _httpClient.PostAsync("decks", new StringContent(JsonSerializer.Serialize(deck), Encoding.UTF8, "application/json"));
+
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //        message = "Deck created";
+    //        NavigationManager.NavigateTo("/");
+    //    }
+    //    else
+    //    {
+    //        message = "Something went wrong";
+    //    }
+    //}
+
 }
