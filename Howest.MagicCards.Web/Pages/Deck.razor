@@ -1,0 +1,18 @@
+﻿@page "/deck"
+@page "/deck/{pagenumber?}"
+
+<h1>@title</h1>
+
+@if (_cards == null)
+{
+    <p>Loading ...</p>
+} else
+{
+    
+    <div class="cards">
+        @foreach(CardReadDTO card in _cards)
+        {
+            <img src="@card.OriginalImageUrl" alt="@card.Name" />
+        }
+    </div>
+}
