@@ -8,11 +8,27 @@
     <p>Loading ...</p>
 } else
 {
-    
-    <div class="cards">
-        @foreach(CardReadDTO card in _cards)
-        {
-            <img src="@card.OriginalImageUrl" alt="@card.Name" />
-        }
+    <div class="card-selection">
+        <div class="cards">
+            @foreach(CardReadDTO card in _cards)
+            {
+                <a href="#" @onclick="@(() => SelectCard(card))" @onclick:preventDefault="true">
+                    <img src="@card.OriginalImageUrl" alt="@card.Name" />
+                </a>
+            }
+        </div>
+        <div class="selected-cards">
+            <h2>Selected cards</h2>
+            <ul>
+                @if (_selectedCards != null)
+                {
+                    @foreach (CardReadDTO card in _selectedCards)
+                    {
+                        <li><a href="#" @onclick="@(() => SelectCard(card))" @onclick:preventDefault="true">@card.Name</a></li>
+                    }
+                }
+                
+            </ul>
+        </div>
     </div>
 }

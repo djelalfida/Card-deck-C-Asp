@@ -12,6 +12,8 @@ public partial class Deck
     private string title = "Card Deck Builder";
 
     private IEnumerable<CardReadDTO>? _cards = null;
+    private List<CardReadDTO> _selectedCards = new List<CardReadDTO>();
+
     private readonly JsonSerializerOptions _jsonOptions;
     private HttpClient _httpClient;
 
@@ -63,4 +65,17 @@ public partial class Deck
             _cards = new List<CardReadDTO>();
         }            
     }
+
+    private void SelectCard(CardReadDTO card)
+    {
+        if (_selectedCards.Contains(card))
+        {
+            _selectedCards.Remove(card);
+        }
+        else
+        {
+            _selectedCards.Add(card);
+        }
+    }
+    
 }
