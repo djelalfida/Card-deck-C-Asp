@@ -9,10 +9,14 @@
 }
 
 <div class="filters">
-    <select @onchange="SortCards">
+    <label for="sort">Sort by name:</label>
+    <select id="sort" @onchange="SortCards">
         <option value="asc" selected="@(SelectedSorting == "asc" ? true : false)">Ascending</option>
         <option value="desc" selected="@(SelectedSorting == "desc" ? true : false)">Descending</option>
     </select>
+
+    <label for="name">Search by name:</label>
+    <input id="name" type="text" @onchange="FindCardByName" placeholder="Ancestor's Chosen" />
 </div>
 
 @if (_cards == null)
