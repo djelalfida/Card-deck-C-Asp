@@ -14,19 +14,25 @@
 } else
 {
     <a href="#" @onclick="NextPage" @onclick:preventDefault="true">Next Page @pageNumber</a>
-    <a href="#" @onclick="PreviousPage" @onclick:preventDefault="true">Previous Page @((Convert.ToInt16(pageNumber) - 1).ToString())</a>
+    
+    @if (pageNumber != null)
+    {
+        <a href="#" @onclick="PreviousPage" @onclick:preventDefault="true">Previous Page @((Convert.ToInt16(pageNumber) - 1).ToString())</a>
+    }
+    
+    
     
     <div class="card-selection">
         <div class="cards">
             @foreach(CardReadDTO card in _cards)
             {
                 <a href="#" @onclick="@(() => SelectCard(card))" @onclick:preventDefault="true">
-                    <img src="@card.OriginalImageUrl" alt="@card.Name" />
+                    <img class="card-img" src="@card.OriginalImageUrl" alt="@card.Name" />
                 </a>
             }
         </div>
         <div class="selected-cards">
-            <h2>Selected cards (@(_selectedCards.Count)/@MaxSelectedCards</h2>
+            <h2>Selected cards (@(_selectedCards.Count)/@MaxSelectedCards)</h2>
             <ul>
                     @foreach (CardReadDTO card in _selectedCards)
                     {
