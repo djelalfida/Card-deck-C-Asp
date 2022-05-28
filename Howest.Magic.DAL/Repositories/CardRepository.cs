@@ -17,5 +17,13 @@
 
             return allCards;
         }
+
+        public IQueryable<Rarity> GetRarities()
+        {
+            IQueryable<Rarity> allRarities = _db.Rarities
+                                           .Select(r => r);
+
+            return allRarities;
+        }
     }
 }
