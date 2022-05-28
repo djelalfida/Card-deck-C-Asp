@@ -21,10 +21,12 @@ builder.Services.AddDbContext<mtg_v1Context>
 
 
 builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 
 
 
 builder.Services.AddAutoMapper(new System.Type[] {
+                                             typeof(Howest.MagicCards.Shared.Mappings.ArtistsProfile),
                                              typeof(Howest.MagicCards.Shared.Mappings.CardsProfile)});
 
 
