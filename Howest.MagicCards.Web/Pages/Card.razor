@@ -1,0 +1,74 @@
+﻿@page "/card"
+
+@using System.Text.Json
+
+@inject ICardRepository cardRepo
+@inject IMapper mapper
+@inject IHttpClientFactory httpClientFactory
+
+<h1>@title</h1>
+
+@if (cards == null)
+{
+    <p>Loading ...</p>
+} else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Mana Cost</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CardReadDTO card in cards)
+            {
+                <tr>
+                    <td>@card.MtgId</td>
+                    <td>@card.Name</td>
+                    <td>@card.ManaCost</td>
+                    <td>@card.Type</td>
+                </tr>
+            }
+           </tbody>
+    </table>
+}
+
+
+@code {
+    private string message = string.Empty;
+    
+    private string title = "Card Deck Builder";
+    
+    private IEnumerable<CardReadDTO>? cards;
+    private readonly JsonSerializerOptions jsonOptions;
+
+    public Card()
+    {
+        jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        HttpClient httpClient = httpClientFactory.CreateClient("CardsAPI");
+
+        HttpResponseMessage response = await httpClient.GetAsync("cards");
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            PagedResponse<IEnumerable<CardReadDTO>>? result = JsonSerializer.Deserialize<PagedResponse<IEnumerable<CardReadDTO>>>(apiResponse, jsonOptions);
+
+            cards = result?.Data;
+        }else
+        {
+            cards = new List<CardReadDTO>(); 
+        }
+    }
+}
