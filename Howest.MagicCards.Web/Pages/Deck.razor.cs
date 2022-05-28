@@ -13,12 +13,15 @@ public partial class Deck
     private string message = string.Empty;
 
     private string title = "Card Deck Builder";
-
+    
     private IEnumerable<CardReadDTO>? _cards = null;
     private List<CardReadDTO> _selectedCards = new List<CardReadDTO>();
 
+    private IEnumerable<ArtistReadDTO>? _artists = null;
+
     private string SelectedSorting { get; set; } = "asc";
     private string NameFilter { get; set; } = string.Empty;
+    private string ArtistFilter { get; set; } = string.Empty;
 
     private readonly JsonSerializerOptions _jsonOptions;
     private HttpClient _httpClient;
@@ -55,6 +58,7 @@ public partial class Deck
         _httpClient = HttpClientFactory.CreateClient("CardsAPI");
 
         await ShowAllCards();
+        await ShowAllArtists();
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,11 +73,13 @@ public partial class Deck
             }
         }
     }
+ 
 
     private async Task ShowAllCards()
     {
         string nameFilter = NameFilter != string.Empty ? $"&name={NameFilter}" : string.Empty;
-        HttpResponseMessage response = await _httpClient.GetAsync($"cards?pagenumber={pageNumber ?? "1"}&sort={SelectedSorting}{nameFilter}");
+        string artistFilter = ArtistFilter != string.Empty ? $"&artistid={ArtistFilter}" : string.Empty;
+        HttpResponseMessage response = await _httpClient.GetAsync($"cards?pagenumber={pageNumber ?? "1"}&sort={SelectedSorting}{nameFilter}{artistFilter}");
 
         string apiResponse = await response.Content.ReadAsStringAsync();
 
@@ -88,6 +94,27 @@ public partial class Deck
             _cards = new List<CardReadDTO>();
         }            
     }
+
+    private async Task ShowAllArtists()
+    {
+        HttpResponseMessage response = await _httpClient.GetAsync($"artists");
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            IEnumerable<ArtistReadDTO>? result = JsonSerializer.Deserialize<IEnumerable<ArtistReadDTO>>(apiResponse, _jsonOptions);
+
+            _artists = result;
+        }
+        else
+        {
+            _artists = new List<ArtistReadDTO>();
+        }
+    }
+
+
+
     private async Task SortCards(ChangeEventArgs e)
     {
         SelectedSorting = e.Value is not null ? e.Value.ToString() : "asc";
@@ -102,6 +129,13 @@ public partial class Deck
         _cards = null;
         await ShowAllCards();
         
+    }
+
+    private async Task FindCardByArtist(ChangeEventArgs e)
+    {
+        ArtistFilter = e.Value != null ? e.Value.ToString() : string.Empty;
+        _cards = null;
+        await ShowAllCards();
     }
 
     private async void SelectCard(CardReadDTO card)

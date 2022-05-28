@@ -17,6 +17,18 @@
 
     <label for="name">Search by name:</label>
     <input id="name" type="text" @onchange="FindCardByName" placeholder="Ancestor's Chosen" />
+
+    <label for="artist">Search by artist @ArtistFilter:</label>
+    <select id="artist" @onchange="FindCardByArtist">
+        <option value="">All</option>
+        @if (_artists != null)
+        {
+            @foreach (ArtistReadDTO artist in _artists)
+            {
+                <option value="@artist.Id">@artist.FullName</option>
+            }
+        }
+    </select>
 </div>
 
 @if (_cards == null)
