@@ -17,6 +17,8 @@ public partial class Deck
     private IEnumerable<CardReadDTO>? _cards = null;
     private List<CardReadDTO> _selectedCards = new List<CardReadDTO>();
 
+    private string SelectedSorting { get; set; } = "asc";
+
     private readonly JsonSerializerOptions _jsonOptions;
     private HttpClient _httpClient;
 
@@ -69,7 +71,7 @@ public partial class Deck
 
     private async Task ShowAllCards()
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"cards?pagenumber={pageNumber ?? "1"}");
+        HttpResponseMessage response = await _httpClient.GetAsync($"cards?pagenumber={pageNumber ?? "1"}&sort={SelectedSorting}");
 
         string apiResponse = await response.Content.ReadAsStringAsync();
 
@@ -83,6 +85,13 @@ public partial class Deck
         {
             _cards = new List<CardReadDTO>();
         }            
+    }
+    private async Task SortCards(ChangeEventArgs e)
+    {
+        SelectedSorting = e.Value is not null ? e.Value.ToString() : "asc";
+        _cards = null;
+        await ShowAllCards();
+        StateHasChanged();
     }
 
     private async void SelectCard(CardReadDTO card)

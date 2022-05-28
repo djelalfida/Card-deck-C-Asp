@@ -8,6 +8,13 @@
     <p>@message</p>
 }
 
+<div class="filters">
+    <select @onchange="SortCards">
+        <option value="asc" selected="@(SelectedSorting == "asc" ? true : false)">Ascending</option>
+        <option value="desc" selected="@(SelectedSorting == "desc" ? true : false)">Descending</option>
+    </select>
+</div>
+
 @if (_cards == null)
 {
     <p>Loading ...</p>
