@@ -9,6 +9,7 @@ namespace Howest.MagicCards.DAL.Models
         {
             CardColors = new HashSet<CardColor>();
             CardTypes = new HashSet<CardType>();
+            Deckscards = new HashSet<Deckscard>();
         }
 
         public long Id { get; set; }
@@ -40,5 +41,6 @@ namespace Howest.MagicCards.DAL.Models
         public virtual Set SetCodeNavigation { get; set; } = null!;
         public virtual ICollection<CardColor> CardColors { get; set; }
         public virtual ICollection<CardType> CardTypes { get; set; }
+        public virtual ICollection<Deckscard> Deckscards { get; set; }
     }
 }

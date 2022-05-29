@@ -21,6 +21,7 @@ namespace Howest.MagicCards.DAL.Models
         public virtual DbSet<CardColor> CardColors { get; set; } = null!;
         public virtual DbSet<CardType> CardTypes { get; set; } = null!;
         public virtual DbSet<Color> Colors { get; set; } = null!;
+        public virtual DbSet<Deckscard> Deckscards { get; set; } = null!;
         public virtual DbSet<Migration> Migrations { get; set; } = null!;
         public virtual DbSet<PersonalAccessToken> PersonalAccessTokens { get; set; } = null!;
         public virtual DbSet<Rarity> Rarities { get; set; } = null!;
@@ -32,7 +33,7 @@ namespace Howest.MagicCards.DAL.Models
 //            if (!optionsBuilder.IsConfigured)
 //            {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=mtg_v1;Integrated Security=True;");
+//                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=mtg_v1;Integrated Security=True");
 //            }
 //        }
 
@@ -251,6 +252,26 @@ namespace Howest.MagicCards.DAL.Models
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnType("datetime")
                     .HasColumnName("updated_at");
+            });
+
+            modelBuilder.Entity<Deckscard>(entity =>
+            {
+                entity.HasKey(e => new { e.CardId, e.Name })
+                    .HasName("pk_deckscard");
+
+                entity.ToTable("deckscard");
+
+                entity.Property(e => e.CardId).HasColumnName("card_id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+
+                entity.HasOne(d => d.Card)
+                    .WithMany(p => p.Deckscards)
+                    .HasForeignKey(d => d.CardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk1_deckscard");
             });
 
             modelBuilder.Entity<Migration>(entity =>
