@@ -15,7 +15,7 @@ public static class DecksEndpoints
         app.MapDelete($"{urlPrefix}/decks/{{name}}", DeleteDeck)
             .WithTags("Decks");
 
-        app.MapGet($"{urlPrefix}/decks/{{name}}", GetDeck);
+        app.MapGet($"{urlPrefix}/decks", GetDecks);
     }
     
     public static void AddDecksServices(this IServiceCollection services, ConfigurationManager config)
@@ -88,25 +88,31 @@ public static class DecksEndpoints
         });
     }
     
-    private static IResult GetDeck(IDeckRepository repo, IMapper mapper, string name)
+    private static IResult GetDecks(IDeckRepository repo, IMapper mapper)
     {
-        return (repo.GetAllDecks() is IQueryable<Deckscard> allDecks)
-                   ? Results.Ok(new PagedResponse<IEnumerable<DeckReadDTO>>(
-                           allDecks
-                               .ProjectTo<DeckReadDTO>(mapper.ConfigurationProvider)
-                               .ToList(),
-                           1,
-                           100)
-                   {
-                       TotalRecords = allDecks.Count()
-                   })
-                   : Results.NotFound(new Response<DeckReadDTO>()
-                   {
-                       Succeeded = false,
-                       Errors = new string[] { "404" },
-                       Message = "No books found "
-                   }
-                   );
+        
+        return (repo.GetAllDecks() is IQueryable<Deckscard> foundDeck)
+                    ? Results.Ok(new Response<IEnumerable<DeckReadDTO>>(
+                            foundDeck
+                                   .ProjectTo<DeckReadDTO>(mapper.ConfigurationProvider)
+                                    .GroupBy(x => x.Name)
+                                    .Select(x => new DeckReadDTO()
+                                    {
+                                        Name = x.Key,
+                                        Card = null,
+                                        Cards = x.Select(y => y.Card).ToList()
+                                    })
+                                    .ToList()
+                        ))
+                    : Results.NotFound(new Response<DeckReadDTO>()
+                    {
+                        Succeeded = false,
+                        Errors = new string[] { "404" },
+                        Message = "No decks found"
+                    });
+
 
     }
 }
+
+

@@ -30,6 +30,9 @@ namespace Howest.MagicCards.WebAPI.Controllers
             {
                 // all cards
                 IQueryable<Card> allCards = _cardRepo.GetAllCards();
+
+                
+
                 List<CardReadDTO> allCardsList = allCards
                                .ToFilteredList(filter.SetCode, filter.ArtistId, filter.RarityCode, filter.Name, filter.OriginalText)
                                .Sort(filter.Sort ?? string.Empty)
@@ -42,6 +45,7 @@ namespace Howest.MagicCards.WebAPI.Controllers
                 {
                     TotalRecords = allCards.Count()
                 };
+
 
                 MemoryCacheEntryOptions cacheOptions = new MemoryCacheEntryOptions()
                 {

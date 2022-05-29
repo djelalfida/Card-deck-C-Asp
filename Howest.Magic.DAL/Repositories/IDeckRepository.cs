@@ -11,4 +11,5 @@ public interface IDeckRepository
     Deckscard? AddDeck(long cardId, string name);
     Deckscard? GetDeck(string name);
     Deckscard? DeleteDeck(string name);
+    IQueryable<Deckscard> GetAllDecks();
 }

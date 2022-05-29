@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Howest.MagicCards.DAL.Repositories;
 
@@ -33,8 +34,18 @@ public class DeckRepository : IDeckRepository
     public Deckscard? GetDeck(string name)
     {
         return _db.Deckscards
+            .Include(d => d.Card)
             .FirstOrDefault(d => d.Name == name);
     }
+
+    public IQueryable<Deckscard> GetAllDecks()
+    {
+                IQueryable <Deckscard> allDecks = _db.Deckscards
+                                        .Include(d => d.Card)
+                                       .Select(b => b);
+
+        return allDecks;
+    }    
 
     public Deckscard? DeleteDeck(string name)
     {

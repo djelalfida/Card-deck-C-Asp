@@ -11,6 +11,9 @@ public class DecksProfile: Profile
     public DecksProfile()
     {
         CreateMap<DeckWriteDTO, Deckscard>();
-        CreateMap<Deckscard, DeckReadDTO>();
+        CreateMap<Deckscard, DeckReadDTO>()
+            .ForMember(dto => dto.Card, m => m.MapFrom(s => s.Card));
+
+
     }
 }

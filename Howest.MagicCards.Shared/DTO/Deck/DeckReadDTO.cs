@@ -9,5 +9,6 @@ namespace Howest.MagicCards.Shared.DTO;
 public record DeckReadDTO
 {
     public string? Name { get; init; }
-    public IEnumerable<Card>? Cards { get; init; }
+    public CardReadDTO Card { get; init; }
+    public IEnumerable<CardReadDTO>? Cards { get; init; }
 }
