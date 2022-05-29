@@ -1,7 +1,10 @@
-﻿namespace Howest.MagicCards.Shared.Extensions;
+﻿using Howest.MagicCards.DAL.Repositories;
+
+namespace Howest.MagicCards.Shared.Extensions;
 
 public static class CardExtensions
 {
+
     public static IQueryable<Card> ToFilteredList(this IQueryable<Card> cards, string setCode, int artistId, string rarityCode, string name, string originalText)
     {
         if (!string.IsNullOrEmpty(setCode))

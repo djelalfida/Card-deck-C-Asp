@@ -44,7 +44,16 @@ namespace Howest.MagicCards.WebAPI.Controllers
                            filter.PageSize)
                 {
                     TotalRecords = allCards.Count()
-                };
+                };    
+                foreach (CardReadDTO card in allCardsList)
+                {
+                    
+
+                    if (string.IsNullOrEmpty(card.OriginalImageUrl) && card != null)
+                    {
+                            card.OriginalImageUrl = _cardRepo.GetOriginalImageUrl("7fef665c-36a1-5f7a-9299-cf8938708710");
+                    }
+                }
 
 
                 MemoryCacheEntryOptions cacheOptions = new MemoryCacheEntryOptions()
