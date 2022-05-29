@@ -1,14 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+
 const string defaultPrefix = "/api";
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+ConfigurationManager config = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddDecksServices();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddDecksServices(config);
+
 
 WebApplication app = builder.Build();
-ConfigurationManager config = builder.Configuration;
 string urlPrefix = config.GetSection("ApiPrefix").Value ?? defaultPrefix;
 
 // Configure the HTTP request pipeline.
