@@ -18,6 +18,9 @@ public partial class Deck
     private IEnumerable<CardReadDTO>? _cards = null;
     private List<CardReadDTO> _selectedCards = new List<CardReadDTO>();
 
+    private IEnumerable<DeckReadDTO>? _decks = null;
+    private string? _deck = string.Empty;
+
     private IEnumerable<ArtistReadDTO>? _artists = null;
     private IEnumerable<RarityReadDTO>? _rarities = null;
 
@@ -31,8 +34,6 @@ public partial class Deck
     private readonly JsonSerializerOptions _jsonOptions;
     private HttpClient _httpClient;
     private HttpClient _httpDeckApiClient;
-
-    private DeckViewModel _deck;
 
     #region Services
     [Inject]
@@ -69,6 +70,7 @@ public partial class Deck
         await ShowAllCards();
         await ShowAllArtists();
         await ShowAllRarities();
+        await GetAllDecks();
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -142,7 +144,39 @@ public partial class Deck
         }
     }
 
+    private async Task GetAllDecks()
+    {
+        HttpResponseMessage response = await _httpDeckApiClient.GetAsync("");
 
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            PagedResponse<IEnumerable<DeckReadDTO>>? result = JsonSerializer.Deserialize<PagedResponse<IEnumerable<DeckReadDTO>>>(apiResponse, _jsonOptions);
+
+            _decks = result?.Data;
+        }
+        else
+        {
+            _decks = new List<DeckReadDTO>();
+        }
+    }
+
+    private async Task DeleteDeck()
+    {
+        HttpResponseMessage response = await _httpDeckApiClient.DeleteAsync($"{_deck}");
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            message = $"Deck {_deck} has been deleted";
+        }
+        else
+        {
+            message = "Deck could not be deleted";
+        }
+    }
 
     private async Task SortCards(ChangeEventArgs e)
     {
@@ -229,6 +263,12 @@ public partial class Deck
 
     private async Task CreateDeck()
     {
+
+        if (_selectedCards.Count != MaxSelectedCards)
+        {
+            message = $"You must select {MaxSelectedCards} cards";
+            return;
+        }
 
         DeckWriteDTO deck = new DeckWriteDTO
         {

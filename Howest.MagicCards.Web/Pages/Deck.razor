@@ -78,6 +78,7 @@
         </div>
         <div class="selected-cards">
             <h2>Selected cards (@(_selectedCards.Count)/@MaxSelectedCards)</h2>
+            <a href="" @onclick="() => _selectedCards.Clear()" @onclick:preventDefault="true">Clear selection</a>
             <ul>
                     @foreach (CardReadDTO card in _selectedCards)
                     {
@@ -87,3 +88,32 @@
         </div>
     </div>
 }
+
+<div class="created-decks">
+    <h2>Created decks</h2>
+    
+    <label for="decks">Select a deck:</label>
+    <select @bind="_deck" id="decks">
+        @if (_decks != null)
+        {
+             <option value="">Select a deck</option>
+            @foreach (DeckReadDTO deck in _decks)
+            {
+                <option value="@deck.Name">@deck.Name</option>
+            }
+        }
+    </select>
+    <a href="" @onclick="DeleteDeck" @onclick:preventDefault="true">Delete selected deck (@_deck)</a>
+    
+    @if (_deck.Length > 0 && _deck != string.Empty)
+    {
+        DeckReadDTO deck = _decks.FirstOrDefault(d => d.Name == _deck);
+        <ul id="current-deck">
+            @foreach (CardReadDTO card in deck.Cards)
+            {
+                <li>@card.Name</li>
+            }
+        </ul>
+    }
+
+</div>

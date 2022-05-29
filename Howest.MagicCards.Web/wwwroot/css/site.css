@@ -95,3 +95,8 @@ a, .btn-link {
     height: 400px;
     overflow-y: scroll;
 }
+
+#current-deck {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+}
