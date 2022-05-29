@@ -25,5 +25,15 @@
 
             return allRarities;
         }
+
+        public string? GetOriginalImageUrl(string variationId)
+        {
+            string? url = _db.Cards
+                            .Where(c => c.MtgId == variationId)
+                            .Select(c => c.OriginalImageUrl)
+                            .FirstOrDefault();
+
+            return url;
+        }
     }
 }

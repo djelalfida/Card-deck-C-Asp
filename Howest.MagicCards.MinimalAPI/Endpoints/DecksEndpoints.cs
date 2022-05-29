@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Howest.MagicCards.WebAPI.Wrappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Howest.MagicCards.MinimalAPI.Endpoints;
 
@@ -10,6 +11,9 @@ public static class DecksEndpoints
             .Accepts<DeckWriteDTO>("application/json")
             .Produces<DeckWriteDTO>(StatusCodes.Status201Created)
             .WithTags("Decks");
+
+        app.MapDelete($"{urlPrefix}/decks/{{name}}", DeleteDeck)
+            .WithTags("Decks");
     }
     
     public static void AddDecksServices(this IServiceCollection services, ConfigurationManager config)
@@ -18,7 +22,7 @@ public static class DecksEndpoints
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-
+        
 
 
         services.AddDbContext<mtg_v1Context>
@@ -35,14 +39,50 @@ public static class DecksEndpoints
                                              typeof(Howest.MagicCards.Shared.Mappings.DecksProfile),
                                              typeof(Howest.MagicCards.Shared.Mappings.CardsProfile)});
     }
-
+    
     private static IResult AddDeck(IDeckRepository repo, DeckWriteDTO deck)
     {
+        if(repo.GetDeck(deck.Name) is not null)
+        {
+            return Results.Conflict(new Response<DeckWriteDTO>()
+            {
+                Succeeded = false,
+                Errors = new string[] { "409" },
+                Message = $"Deck with name {deck.Name} already exists"
+            });
+        }
+
         foreach (long card in deck.Cards)
         {
             repo.AddDeck(card, deck.Name);
         }
+        
+        return Results.Ok(new Response<DeckWriteDTO>()
+        {
+            Succeeded = true,
+            Errors = new string[] { "" },
+            Message = $"Deck {deck.Name} was successfully created!"
+        });
+    }
 
-        return Results.Ok($"Deck {deck.Name} added");
+    private static IResult DeleteDeck(IDeckRepository repo, string name)
+    {
+        if (repo.GetDeck(name) is null)
+        {
+            return Results.NotFound(new Response<DeckWriteDTO>()
+            {
+                Succeeded = false,
+                Errors = new string[] { "404" },
+                Message = $"Deck with name {name} does not exist"
+            });
+        }
+
+        repo.DeleteDeck(name);
+        return Results.Ok(new Response<DeckWriteDTO>()
+        {
+            Succeeded = true,
+            Errors = new string[] { "" },
+            Message = $"Deck {name} was successfully deleted!"
+        });
     }
 }

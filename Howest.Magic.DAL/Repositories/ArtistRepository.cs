@@ -12,7 +12,7 @@ public class ArtistRepository : IArtistRepository
         _db = db;
     }
 
-    public IEnumerable<Artist> GetAllArtists(int limit)
+    public IQueryable<Artist> GetAllArtists(int limit)
     {
         IQueryable<Artist> allArtists = _db.Artists
                                             .Select(a => a);
@@ -20,7 +20,7 @@ public class ArtistRepository : IArtistRepository
         return limit > 0 ? allArtists.Take(limit) : allArtists;
     }
 
-    public IEnumerable<Card> GetRelatedCards(long id) {
+    public IQueryable<Card> GetRelatedCards(long id) {
         IQueryable<Card> relatedCards = _db.Cards
                                             .Where(c => c.ArtistId == id)
                                             .Select(c => c);

@@ -4,5 +4,6 @@
     {
         IQueryable<Card> GetAllCards();
         IQueryable<Rarity> GetRarities();
+        string? GetOriginalImageUrl(string variationId);
     }
 }
