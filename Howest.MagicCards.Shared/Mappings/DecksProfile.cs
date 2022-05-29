@@ -11,6 +11,6 @@ public class DecksProfile: Profile
     public DecksProfile()
     {
         CreateMap<DeckWriteDTO, Deckscard>();
-        CreateMap<Deckscard, DeckWriteDTO>();
+        CreateMap<Deckscard, DeckReadDTO>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Howest.MagicCards.Shared.ViewModels;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.Net;
 using System.Text;
@@ -25,8 +26,13 @@ public partial class Deck
     private string ArtistFilter { get; set; } = string.Empty;
     private string RarityFilter { get; set; } = string.Empty;
 
+    private string? _deckName = string.Empty;
+
     private readonly JsonSerializerOptions _jsonOptions;
     private HttpClient _httpClient;
+    private HttpClient _httpDeckApiClient;
+
+    private DeckViewModel _deck;
 
     #region Services
     [Inject]
@@ -58,6 +64,7 @@ public partial class Deck
     protected override async Task OnInitializedAsync()
     {
         _httpClient = HttpClientFactory.CreateClient("CardsAPI");
+        _httpDeckApiClient = HttpClientFactory.CreateClient("DecksAPI");
 
         await ShowAllCards();
         await ShowAllArtists();
@@ -220,30 +227,31 @@ public partial class Deck
         return storageResult.Success ? storageResult.Value : new List<CardReadDTO>();
     }
 
-    //private async Task CreateDeck()
-    //{
-    //    if (_selectedCards.Count == 0)
-    //    {
-    //        message = "You need to select at least one card";
-    //        return;
-    //    }
+    private async Task CreateDeck()
+    {
 
-    //    DeckCreateDTO deck = new DeckCreateDTO
-    //    {
-    //        Cards = _selectedCards.Select(c => c.Id).ToList()
-    //    };
+        DeckWriteDTO deck = new DeckWriteDTO
+        {
+            Cards = _selectedCards.Select(c => c.Id).ToList(),
+            Name = _deckName
+        };
 
-    //    HttpResponseMessage response = await _httpClient.PostAsync("decks", new StringContent(JsonSerializer.Serialize(deck), Encoding.UTF8, "application/json"));
+        HttpContent content =
+            new StringContent(JsonSerializer.Serialize(deck), Encoding.UTF8, "application/json");
 
-    //    if (response.IsSuccessStatusCode)
-    //    {
-    //        message = "Deck created";
-    //        NavigationManager.NavigateTo("/");
-    //    }
-    //    else
-    //    {
-    //        message = "Something went wrong";
-    //    }
-    //}
+        HttpResponseMessage response = await _httpDeckApiClient.PostAsync("create", content);      
+
+        if (response.IsSuccessStatusCode)
+        {
+            message = "Deck created";
+            NavigationManager.NavigateTo("/deck");
+        }
+        else
+        {
+            message = "Something went wrong";
+        }
+    }
+
+
 
 }

@@ -23,6 +23,11 @@ builder.Services.AddHttpClient("CardsAPI", client =>
     client.BaseAddress = new Uri(config.GetValue<string>("ApiLink"));
 });
 
+builder.Services.AddHttpClient("DecksAPI", client =>
+{
+    client.BaseAddress = new Uri(config.GetValue<string>("MinimalApiDeckLink"));
+});
+
 
 
 WebApplication app = builder.Build();

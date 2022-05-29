@@ -27,6 +27,7 @@ builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 
 builder.Services.AddAutoMapper(new System.Type[] {
                                              typeof(Howest.MagicCards.Shared.Mappings.ArtistsProfile),
+                                             typeof(Howest.MagicCards.Shared.Mappings.DecksProfile),
                                              typeof(Howest.MagicCards.Shared.Mappings.CardsProfile)});
 
 

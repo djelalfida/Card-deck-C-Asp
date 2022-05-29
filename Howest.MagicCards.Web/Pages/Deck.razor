@@ -44,6 +44,15 @@
     </select>
 </div>
 
+<h1>@_deckName</h1>
+
+@if (_selectedCards.Count == MaxSelectedCards)
+{
+    <input id="deck-name" type="text" placeholder="Deck name" @bind="_deckName" />
+    <button @onclick="CreateDeck" @onclick:preventDefault="true">Save Deck</button>
+}
+
+
 @if (_cards == null)
 {
     <p>Loading ...</p>

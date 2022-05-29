@@ -14,6 +14,8 @@ public static class DecksEndpoints
 
         app.MapDelete($"{urlPrefix}/decks/{{name}}", DeleteDeck)
             .WithTags("Decks");
+
+        app.MapGet($"{urlPrefix}/decks/{{name}}", GetDeck);
     }
     
     public static void AddDecksServices(this IServiceCollection services, ConfigurationManager config)
@@ -76,7 +78,7 @@ public static class DecksEndpoints
                 Message = $"Deck with name {name} does not exist"
             });
         }
-
+        
         repo.DeleteDeck(name);
         return Results.Ok(new Response<DeckWriteDTO>()
         {
@@ -84,5 +86,27 @@ public static class DecksEndpoints
             Errors = new string[] { "" },
             Message = $"Deck {name} was successfully deleted!"
         });
+    }
+    
+    private static IResult GetDeck(IDeckRepository repo, IMapper mapper, string name)
+    {
+        return (repo.GetAllDecks() is IQueryable<Deckscard> allDecks)
+                   ? Results.Ok(new PagedResponse<IEnumerable<DeckReadDTO>>(
+                           allDecks
+                               .ProjectTo<DeckReadDTO>(mapper.ConfigurationProvider)
+                               .ToList(),
+                           1,
+                           100)
+                   {
+                       TotalRecords = allDecks.Count()
+                   })
+                   : Results.NotFound(new Response<DeckReadDTO>()
+                   {
+                       Succeeded = false,
+                       Errors = new string[] { "404" },
+                       Message = "No books found "
+                   }
+                   );
+
     }
 }
