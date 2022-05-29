@@ -1,0 +1,19 @@
+﻿SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[deckscard](
+	[card_id] [bigint] NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
+ CONSTRAINT [pk_deckscard] PRIMARY KEY CLUSTERED 
+(
+	[card_id] ASC,
+	[name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[deckscard]  WITH CHECK ADD  CONSTRAINT [fk1_deckscard] FOREIGN KEY([card_id])
+REFERENCES [dbo].[cards] ([id])
+GO
+ALTER TABLE [dbo].[deckscard] CHECK CONSTRAINT [fk1_deckscard]
+GO
