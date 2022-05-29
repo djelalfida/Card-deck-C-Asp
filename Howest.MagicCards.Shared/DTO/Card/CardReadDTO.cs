@@ -2,6 +2,7 @@
 
 public record CardReadDTO
 {
+    public long Id { get; init; }
     public string? Name { get; init; }
     public string? ManaCost { get; init; }
     public string? ConvertedManaCost { get; init; }
